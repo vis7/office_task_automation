@@ -9,12 +9,12 @@ from docx import Document
 from openpyxl import load_workbook
 
 # getting name from excel sheet
-workbook = load_workbook('Joinning Students.xlsx')
+workbook = load_workbook('data/joining_student_list.xlsx')
 
 sheet = workbook.active
 
 # generate letter in doc format
-for i in range(2, 74):
+for i in range(2, 4):
     name = sheet.cell(row=i, column=1).value
     subject = sheet.cell(row=i, column=2).value
     date = sheet.cell(row=i, column=3).value
@@ -29,14 +29,16 @@ for i in range(2, 74):
         # code for replacing name in doc
         #######################################
         #open the document
-        doc=Document('internship_confirmation_letter_template_old.docx')
+        doc=Document('data/joining_letter_template.docx')
 
-        # for i in Dictionary:
         for p in doc.paragraphs:
-            # print(p.text)
-            p.text=p.text.replace("<Name>", f"{name}")
-            p.text=p.text.replace("<Subject>", f"{subject}")
-            p.text=p.text.replace("<Date>", f"{date}")
+            inline = p.runs
+            for i in range(len(inline)):
+                text = inline[i].text
+                text=text.replace('Name',name)
+                text=text.replace('Subject', subject)
+                text=text.replace('Date', date)
+                inline[i].text = text
         
         # save changed document
         doc.save(f'./docs/Internship Confirmation {name}.docx')

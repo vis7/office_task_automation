@@ -1,5 +1,6 @@
 letter_pdf/docs/*
 letter_pdf/pdfs/*
+letter_pdf/data/joining_student_list.xlsx
 
 certificate_pdf/*
 
