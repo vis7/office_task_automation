@@ -2,7 +2,8 @@ letter_pdf/docs/*
 letter_pdf/pdfs/*
 letter_pdf/data/joining_student_list.xlsx
 
-certificate_pdf/*
+certificate_pdf/certificates/*
+
 
 ################################################################################
 ## Default python .gitignore content
