@@ -2,26 +2,41 @@
 This file take excel containing list of students and generate pdf letter for them 
 from given template.
 """
-
+###############################################################
+# Adding absolute path to the root directory for using absolute path
+###############################################################
 import os
-from subprocess import  Popen
+import sys
+
+abs_path_of_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.append(abs_path_of_directory)
+################################################################
 from docx import Document
 from openpyxl import load_workbook
+from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf
 
 # getting name from excel sheet
-workbook = load_workbook('data/joining_student_list.xlsx')
-
+workbook = load_workbook('data/student list.xlsx')
 sheet = workbook.active
+sample_doc_dir = 'docs/'
+out_folder = 'pdfs/'
+
+session = create_session()
 
 # generate letter in doc format
-for i in range(2, 4):
+for i in range(47, 492):
     name = sheet.cell(row=i, column=1).value
     subject = sheet.cell(row=i, column=2).value
     date = sheet.cell(row=i, column=3).value
+    email = sheet.cell(row=i, column=4).value
+
+    # refine email
+    if email:
+        email = email.strip()
 
     # reformate date to proper format
     if date:
-        date = date.strftime('%d/%m/%Y')
+        # date = date.strftime('%d/%m/%Y')
 
         print(f"Generating certificate for: {name} {subject} {date}")
 
@@ -41,24 +56,17 @@ for i in range(2, 4):
                 inline[i].text = text
         
         # save changed document
-        doc.save(f'./docs/Internship Confirmation {name}.docx')
+        letter_doc_path = f'./docs/Internship Confirmation {name}.docx'
+        doc.save(letter_doc_path)
 
-# convert doc to pdf
-LIBRE_OFFICE = r"/usr/bin/libreoffice"
+        convert_to_pdf(letter_doc_path, out_folder)
 
-def convert_to_pdf(input_docx, out_folder):
-    p = Popen([LIBRE_OFFICE, '--headless', '--convert-to', 'pdf', '--outdir',
-               out_folder, input_docx])
-    print([LIBRE_OFFICE, '--convert-to', 'pdf', input_docx])
-    p.communicate()
+        if email:
+            # sending mail
+            letter_pdf_path = f'./pdfs/Internship Confirmation {name}.pdf'
+            send_mail(email, session, letter_pdf_path)
 
-
-sample_doc_dir = 'docs/'
-out_folder = 'pdfs/'
-
-for i in os.listdir(sample_doc_dir):
-    convert_to_pdf(os.path.join(sample_doc_dir, i), out_folder)
-
+destroy_session(session)
 
 # remove docs
 for file_name in os.listdir(sample_doc_dir):
