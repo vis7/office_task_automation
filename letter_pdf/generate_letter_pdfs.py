@@ -11,9 +11,12 @@ import sys
 abs_path_of_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.append(abs_path_of_directory)
 ################################################################
+import platform
 from docx import Document
 from openpyxl import load_workbook
 from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf
+
+os_type = platform.system()
 
 # getting name from excel sheet
 workbook = load_workbook('data/student list.xlsx')
@@ -24,10 +27,10 @@ out_folder = 'pdfs/'
 session = create_session()
 
 # generate letter in doc format
-for i in range(47, 492):
-    name = sheet.cell(row=i, column=1).value
-    subject = sheet.cell(row=i, column=2).value
-    date = sheet.cell(row=i, column=3).value
+for i in range(1, 1000):
+    name = sheet.cell(row=i, column=2).value
+    subject = sheet.cell(row=i, column=3).value
+    date = sheet.cell(row=i, column=1).value
     email = sheet.cell(row=i, column=4).value
 
     # refine email
@@ -35,7 +38,7 @@ for i in range(47, 492):
         email = email.strip()
 
     # reformate date to proper format
-    if date:
+    if date: # if date or any field is missing then skip the row
         # date = date.strftime('%d/%m/%Y')
 
         print(f"Generating certificate for: {name} {subject} {date}")
