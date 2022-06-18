@@ -1,16 +1,20 @@
 # libraries to be imported
 import smtplib
+import platform
 import logging
+from docx2pdf import convert
 from smtplib import SMTPResponseException
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from subprocess import  Popen
-   
+
 fromaddr = "help.vnurture@gmail.com"
 password = "brdeetidhbilhrah"
 toaddr = "vishvajeetramanuj95@gmail.com"
+
+os_type = platform.system()
 
 logger = logging.getLogger(__name__)
 f_handler = logging.FileHandler('sending_email.log')
@@ -95,16 +99,21 @@ def destroy_session(session):
     session.quit()
 
 # convert doc to pdf
-
-
 def convert_to_pdf(input_docx, out_folder):
-    p = Popen([LIBRE_OFFICE, '--headless', '--convert-to', 'pdf', '--outdir',
-               out_folder, input_docx])
-    print([LIBRE_OFFICE, '--convert-to', 'pdf', input_docx])
-    p.communicate()
+    if os_type == 'Linux':
+        p = Popen([LIBRE_OFFICE, '--headless', '--convert-to', 'pdf', '--outdir',
+                out_folder, input_docx])
+        print([LIBRE_OFFICE, '--convert-to', 'pdf', input_docx])
+        p.communicate()
+    elif os_type == 'Windows':
+        convert(input_docx, out_folder)
+    else:
+        print('Invalid Operation System.')
+        print('Works only on Linux and Windows.')
 
 
-session = create_session()
-send_mail(toaddr, session, 'test.pdf')
-destroy_session(session)  
+if __name__ == "__main__":
+    session = create_session()
+    send_mail(toaddr, session, 'test.pdf')
+    destroy_session(session)  
 
