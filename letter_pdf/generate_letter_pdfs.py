@@ -30,9 +30,9 @@ def send_confirmation_letter(excel_file_path):
 
     # generate letter in doc format
     for i in range(1, 1000):
-        name = sheet.cell(row=i, column=2).value
-        subject = sheet.cell(row=i, column=3).value
-        date = sheet.cell(row=i, column=1).value
+        name = sheet.cell(row=i, column=1).value
+        subject = sheet.cell(row=i, column=2).value
+        date = sheet.cell(row=i, column=3).value
         email = sheet.cell(row=i, column=4).value
 
         # refine email

@@ -101,6 +101,8 @@ def destroy_session(session):
 # convert doc to pdf
 def convert_to_pdf(input_docx, out_folder):
     if os_type == 'Linux':
+        out_folder = "letter_pdf/pdfs/" # file will be export in this folder
+
         p = Popen([LIBRE_OFFICE, '--headless', '--convert-to', 'pdf', '--outdir',
                 out_folder, input_docx])
         print([LIBRE_OFFICE, '--convert-to', 'pdf', input_docx])
