@@ -1,2 +1,3 @@
-pip install python-docx
-pip install openpyxl
+python-docx
+openpyxl
+docx2pdf
