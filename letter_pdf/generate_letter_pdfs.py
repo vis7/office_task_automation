@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf, check_email
 
 os_type = platform.system()
-sample_doc_dir = 'letter_pdf/docs/'
+sample_doc_dir = os.path.join('letter_pdf', 'docs')
 
 session = create_session()
 
@@ -50,7 +50,8 @@ def send_confirmation_letter(excel_file_path):
             # code for replacing name in doc
             #######################################
             #open the document
-            doc=Document('letter_pdf/data/nCompletion_letter_template.docx')
+            letter_template_path = os.path.join('letter_pdf', 'data', 'joining_letter_template.docx')
+            doc=Document(letter_template_path)
 
             for p in doc.paragraphs:
                 inline = p.runs
@@ -62,15 +63,15 @@ def send_confirmation_letter(excel_file_path):
                     inline[i].text = text
             
             # save changed document
-            letter_doc_path = f'letter_pdf/docs/Internship Confirmation {name}.docx'
+            letter_doc_path = os.path.join('letter_pdf', 'docs', f'Internship Confirmation {name}.docx')
             doc.save(letter_doc_path)
 
-            letter_pdf_path = f'letter_pdf/pdfs/Internship Confirmation {name}.pdf'
+            letter_pdf_path = os.path.join('letter_pdf', 'docs', f'Internship Confirmation {name}.pdf')
             convert_to_pdf(letter_doc_path, letter_pdf_path)
 
             if email and check_email(email):
                 # sending mail
-                send_mail(email, session, letter_pdf_path, message)
+                send_mail(email, session, letter_pdf_path)
 
     destroy_session(session)
 
