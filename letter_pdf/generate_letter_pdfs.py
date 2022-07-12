@@ -14,7 +14,7 @@ os.sys.path.append(abs_path_of_directory)
 import platform
 from docx import Document
 from openpyxl import load_workbook
-from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf
+from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf, check_email
 
 os_type = platform.system()
 sample_doc_dir = 'letter_pdf/docs/'
@@ -29,7 +29,7 @@ def send_confirmation_letter(excel_file_path):
     sheet = workbook.active
 
     # generate letter in doc format
-    for i in range(1, 1000):
+    for i in range(705, 1000):
         name = sheet.cell(row=i, column=1).value
         subject = sheet.cell(row=i, column=2).value
         date = sheet.cell(row=i, column=3).value
@@ -41,7 +41,8 @@ def send_confirmation_letter(excel_file_path):
 
         # reformate date to proper format
         if date: # if date or any field is missing then skip the row
-            # date = date.strftime('%d/%m/%Y')
+            if type(date).__name__ == 'datetime':
+                date = date.strftime('%d/%m/%Y')
 
             print(f"Generating certificate for: {name} {subject} {date}")
 
@@ -49,7 +50,7 @@ def send_confirmation_letter(excel_file_path):
             # code for replacing name in doc
             #######################################
             #open the document
-            doc=Document('letter_pdf/data/joining_letter_template.docx')
+            doc=Document('letter_pdf/data/nCompletion_letter_template.docx')
 
             for p in doc.paragraphs:
                 inline = p.runs
@@ -67,9 +68,9 @@ def send_confirmation_letter(excel_file_path):
             letter_pdf_path = f'letter_pdf/pdfs/Internship Confirmation {name}.pdf'
             convert_to_pdf(letter_doc_path, letter_pdf_path)
 
-            if email:
+            if email and check_email(email):
                 # sending mail
-                send_mail(email, session, letter_pdf_path)
+                send_mail(email, session, letter_pdf_path, message)
 
     destroy_session(session)
 

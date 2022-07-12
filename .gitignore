@@ -3,7 +3,7 @@ letter_pdf/pdfs/*
 letter_pdf/data/student list.xlsx
 
 certificate_pdf/certificates/*
-
+certificate_pdf/completion_letter/*
 
 ################################################################################
 ## Default python .gitignore content
