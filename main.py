@@ -6,7 +6,7 @@ from certificate_pdf.edit_image import send_certificate, send_completion_letter
 confirmation_letter_message = """
 Greetings from Vnurture Technologies,
 
-Congratulations! You are successfully enrolled in 15 days Internship Programme. 
+Congratulations! You have successfully completed 15 days Internship Programme. 
 kindly find your Confirmation letter which attached below.
 
 Stay tuned with Vnurture Services.

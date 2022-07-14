@@ -37,7 +37,7 @@ def send_mail(receiver_email, session, filename, task='send_joining_letter'):
     body = f"""
 Greetings from Vnurture Technologies,
 
-Congratulations! You are successfully enrolled in 15 days Internship Programme. 
+Congratulations! You have successfully completed 15 days Internship Programme. 
 kindly find your {body_part} which attached below.
 
 Stay tuned with Vnurture Services.
@@ -88,6 +88,7 @@ Vnurture Technologies
     
     # sending the mail
     try:
+        print('sending mail...')
         session.sendmail(fromaddr, receiver_email, text)
     except SMTPResponseException as e:
         print(f"{receiver_email} {e.smtp_code} {e.smtp_error}")
