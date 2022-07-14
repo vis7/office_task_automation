@@ -22,16 +22,18 @@ def send_certificate(filepath):
 
     session = create_session()
 
-    for i in range(2,1000):
+    for i in range(2,2000):
         name = sheet.cell(row=i, column=1).value
         subject = sheet.cell(row=i, column=2).value
         date = sheet.cell(row=i, column=3).value
-        duration = sheet.cell(row=i, column=4).value
-        email = sheet.cell(row=i, column=5).value
+        duration = "15 Days Internship" # sheet.cell(row=i, column=4).value
+        email = sheet.cell(row=i, column=4).value
 
         if date:
-            date = date.strftime('%d/%m/%Y')
-            if name:
+            if type(date).__name__ == 'datetime':
+                date = date.strftime('%d/%m/%Y')
+            
+            if name and subject and duration and date:
                 name = name.title()
                 print(f"Generating Certificate for {name} {subject} {date}")
                 img = Image.open("certificate_pdf/data/certificate.jpg")
@@ -44,8 +46,11 @@ def send_certificate(filepath):
                 certificate_path = f'certificate_pdf/certificates/{name}_certificate.jpeg'
                 img.save(certificate_path)
 
-                # sending certificate with email
-                send_mail(email, session, certificate_path, task='send_completion_letter')
+                if email and check_email(email):
+                    # sending certificate with email
+                    send_mail(email, session, certificate_path, task='send_completion_letter')
+            else:
+                print(f"Certificate generation failed for: {name} {subject} {date} {duration}")
 
     destroy_session(session)
 
@@ -59,24 +64,24 @@ def send_completion_letter(filepath):
     subject_font = ImageFont.truetype('certificate_pdf/data/fonts/lucida calligraphy italic.ttf',20)
 
     date_position = (110,470)
-    name_position = (440, 740) # 1150
+    name_position = (440, 740)
     subject_position = (500,800)
-     # (330,1500)
 
     session = create_session()
 
-    for i in range(2,1000):
+    for i in range(1419,2000):
         name = sheet.cell(row=i, column=1).value
         subject = sheet.cell(row=i, column=2).value
         date = sheet.cell(row=i, column=3).value
-        duration = sheet.cell(row=i, column=4).value
-        email = sheet.cell(row=i, column=5).value
+        email = sheet.cell(row=i, column=4).value
 
         if date:
-            date = date.strftime('%d/%m/%Y')
-            if name:
+            if type(date).__name__ == 'datetime':
+                date = date.strftime('%d/%m/%Y')
+            
+            if name and subject and date and email:
                 name = name.title()
-                print(f"Generating Certificate for {name} {subject} {date}")
+                print(f"Generating Completion Letter for {name} {subject} {date}")
                 img = Image.open("certificate_pdf/data/completion_letter_template.jpg")
                 image_ed = ImageDraw.Draw(img)
 
@@ -90,6 +95,7 @@ def send_completion_letter(filepath):
                 img.save(certificate_path)
 
                 # sending certificate with email
-                # send_mail(email, session, certificate_path, task='')
+                if email and check_email(email):
+                    send_mail(email, session, certificate_path, task='send_completion_letter')
 
     destroy_session(session)

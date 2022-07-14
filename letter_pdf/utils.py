@@ -25,7 +25,7 @@ LIBRE_OFFICE = r"/usr/bin/libreoffice"
 
 def send_mail(receiver_email, session, filename, task='send_joining_letter'):
     # task
-    task = 'send_certificate'
+    # task = 'send_certificate'
     if task == 'send_certificate':
         body_part = "Certificate"
     elif task == 'send_completion_letter':
