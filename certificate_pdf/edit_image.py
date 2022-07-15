@@ -69,7 +69,7 @@ def send_completion_letter(filepath):
 
     session = create_session()
 
-    for i in range(2,2000):
+    for i in range(1276,2000):
         name = sheet.cell(row=i, column=1).value
         subject = sheet.cell(row=i, column=2).value
         date = sheet.cell(row=i, column=3).value
