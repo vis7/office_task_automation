@@ -22,7 +22,6 @@ sample_doc_dir = os.path.join('letter_pdf', 'docs')
 session = create_session()
 
 # create folders if not exist
-
 def send_confirmation_letter(excel_file_path):
     # getting name from excel sheet
     workbook = load_workbook(excel_file_path)
