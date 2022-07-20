@@ -14,22 +14,21 @@ os.sys.path.append(abs_path_of_directory)
 import platform
 from docx import Document
 from openpyxl import load_workbook
-from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf
+from letter_pdf.utils import send_mail, create_session, destroy_session, convert_to_pdf, check_email
 
 os_type = platform.system()
-sample_doc_dir = 'letter_pdf/docs/'
+sample_doc_dir = os.path.join('letter_pdf', 'docs')
 
 session = create_session()
 
 # create folders if not exist
-
 def send_confirmation_letter(excel_file_path):
     # getting name from excel sheet
     workbook = load_workbook(excel_file_path)
     sheet = workbook.active
 
     # generate letter in doc format
-    for i in range(1, 1000):
+    for i in range(2, 1000):
         name = sheet.cell(row=i, column=1).value
         subject = sheet.cell(row=i, column=2).value
         date = sheet.cell(row=i, column=3).value
@@ -41,7 +40,8 @@ def send_confirmation_letter(excel_file_path):
 
         # reformate date to proper format
         if date: # if date or any field is missing then skip the row
-            # date = date.strftime('%d/%m/%Y')
+            if type(date).__name__ == 'datetime':
+                date = date.strftime('%d/%m/%Y')
 
             print(f"Generating certificate for: {name} {subject} {date}")
 
@@ -49,7 +49,8 @@ def send_confirmation_letter(excel_file_path):
             # code for replacing name in doc
             #######################################
             #open the document
-            doc=Document('letter_pdf/data/joining_letter_template.docx')
+            letter_template_path = os.path.join('letter_pdf', 'data', 'joining_letter_template.docx')
+            doc=Document(letter_template_path)
 
             for p in doc.paragraphs:
                 inline = p.runs
@@ -61,13 +62,13 @@ def send_confirmation_letter(excel_file_path):
                     inline[i].text = text
             
             # save changed document
-            letter_doc_path = f'letter_pdf/docs/Internship Confirmation {name}.docx'
+            letter_doc_path = os.path.join('letter_pdf', 'docs', f'Internship Confirmation {name}.docx')
             doc.save(letter_doc_path)
 
-            letter_pdf_path = f'letter_pdf/pdfs/Internship Confirmation {name}.pdf'
+            letter_pdf_path = os.path.join('letter_pdf', 'docs', f'Internship Confirmation {name}.pdf')
             convert_to_pdf(letter_doc_path, letter_pdf_path)
 
-            if email:
+            if email and check_email(email):
                 # sending mail
                 send_mail(email, session, letter_pdf_path)
 
