@@ -28,7 +28,7 @@ def send_confirmation_letter(excel_file_path):
     sheet = workbook.active
 
     # generate letter in doc format
-    for i in range(705, 1000):
+    for i in range(2, 1000):
         name = sheet.cell(row=i, column=1).value
         subject = sheet.cell(row=i, column=2).value
         date = sheet.cell(row=i, column=3).value
